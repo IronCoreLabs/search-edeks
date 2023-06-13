@@ -18,7 +18,8 @@ Check out this repo and run `cargo b --release`. The binary will be at `target/r
 search-edeks --help
 search-edeks 1.0.0
 IronCore Labs <info@ironcorelabs.com>
-Tool to find EDEKs that are encrypted with the given KMS config ID.
+Tool to search EDEK's protobuf. Can be used to find EDEKs that need to be rekeyed from an old KMS
+config ID.
 
 USAGE:
     search-edeks [OPTIONS] --id <VALUE> --file <FILE> <--hex|--base64>
