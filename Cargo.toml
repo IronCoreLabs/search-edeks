@@ -1,0 +1,23 @@
+[package]
+name = "search-edeks"
+version = "1.0.0"
+authors = ["IronCore Labs <info@ironcorelabs.com>"]
+categories = ["utilities"]
+description = "Tool to find EDEKs that are encrypted with the given KMS config ID."
+edition = "2021"
+license = "AGPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/IronCoreLabs/search-edeks"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = "~0.21"
+bytes = "1.4.0"
+clap = { version = "~3", features = ["cargo", "derive", "suggestions"] }
+hex = "0.4.3"
+protobuf = {version = "3.2", features = ["with-bytes"]}
+ron = "0.8.0"
+serde = { version = "~1.0", features = ["derive"] }
+
+[build-dependencies]
+protobuf-codegen = "3.2"

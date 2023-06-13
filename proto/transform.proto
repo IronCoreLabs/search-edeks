@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package ironcorelabs.proto.cmk;
+
+option java_package = "com.ironcorelabs.proto.cmk";
+option java_outer_classname = "EncryptedDekProtos";
+
+message EncryptedDek {
+  bytes encryptedDekData = 1;
+  int32 kmsConfigId = 2;
+  int32 leasedKeyId = 3;
+  bytes leasedKeyIv = 4;
+  bytes encryptedLeasedKeyData = 5;
+}
+
+message EncryptedDeks { repeated EncryptedDek encryptedDeks = 1; }
+
+message AzureKeyVersionAndData {
+  bytes encryptedDekData = 1;
+  string keyVersion = 2;
+}
+
+message ThalesMetaAndData {
+  bytes encryptedDekData = 1;
+  bytes encryptionIv = 2;
+  bytes encryptionTag = 3;
+  string encryptionMode = 4;
+  int32 keyVersion = 5;
+  string keyIdType = 6;
+}
