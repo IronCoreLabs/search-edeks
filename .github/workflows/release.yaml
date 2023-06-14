@@ -67,7 +67,7 @@ jobs:
       RUST_BACKTRACE: 1
     strategy:
       matrix:
-        build: [linux, linux-arm64, linux-arm, macos, win-msvc, win-gnu]
+        build: [linux, linux-arm64, linux-arm, macos, macos-arm64, win-msvc, win-gnu]
         include:
         - build: linux
           os: ubuntu-22.04
@@ -81,7 +81,7 @@ jobs:
         - build: macos
           os: macos-12
           target: x86_64-apple-darwin
-        - build: macos
+        - build: macos-arm64
           os: [self-hosted, macOS, ARM64]
           target: aarch64-apple-darwin
         - build: win-msvc
