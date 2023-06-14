@@ -130,7 +130,7 @@ jobs:
       run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
 
     - name: Strip release binary (linux and mac)
-      if: matrix.build == 'linux' || matrix.build == 'macos'
+      if: matrix.build == 'linux' || matrix.build == 'macos' || matrix.build == 'macos-arm64'
       run: strip "target/${{ matrix.target }}/release/search-edeks"
 
     - name: Strip release binary (arm)
