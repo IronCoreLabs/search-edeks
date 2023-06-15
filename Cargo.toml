@@ -1,6 +1,6 @@
 [package]
 name = "search-edeks"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["IronCore Labs <info@ironcorelabs.com>"]
 categories = ["utilities"]
 description = "Tool to search EDEK's protobuf. Can be used to find EDEKs that need to be rekeyed from an old KMS config ID."
