@@ -6,10 +6,10 @@ mod proto {
 use base64::{engine::general_purpose::STANDARD, Engine};
 use std::{
     fs::File,
-    io::{BufRead, BufReader, Write},
+    io::{BufRead, BufReader},
     path::{Path, PathBuf},
 };
-use util::edek_from_bytes;
+use util::{edek_from_bytes, write_file, EdekFileEntry};
 
 use clap::{arg, command, value_parser, ArgAction, ArgGroup};
 
@@ -40,6 +40,7 @@ fn main() {
                 .args(&["hex", "base64"]),
         )
         .arg(arg!(-d --debug "Print extra debug information").action(ArgAction::SetTrue))
+        .arg(arg!(-v --verbose "Output identifier and original EDEK (and error message if applicable). If not enabled, only identifiers will be output").action(ArgAction::SetTrue))
         .get_matches();
 
     // get our required arguments
@@ -50,6 +51,7 @@ fn main() {
     let use_hex = matches.get_flag("hex");
     let use_base64 = matches.get_flag("base64");
     let debug: bool = matches.get_flag("debug");
+    let verbose: bool = matches.get_flag("verbose");
 
     // read the edek tuples line by line
     let edek_file = File::open(edek_file_path)
@@ -58,6 +60,7 @@ fn main() {
     // zip an index in so we can give line numbers
     let edek_lines = BufReader::new(edek_file).lines().zip(1..);
     let mut found_lines: Vec<EdekFileEntry> = vec![];
+    let mut found_broken: Vec<(String, String, String)> = vec![];
     for line in edek_lines {
         if let (Ok(edek_entry), line_number) = line {
             if debug {
@@ -69,21 +72,16 @@ fn main() {
             // decode the edek string in the desired format
             // if we fail, log it, but keep going in case there are lines that match
             let decode_attempt = if use_base64 {
-                STANDARD.decode(edek.clone()).map_err(|e| {
-                    format!(
-                        "WARNING: EDEK was not base64 at line {}: {}",
-                        line_number, e
-                    )
-                })
+                STANDARD
+                    .decode(edek.clone())
+                    .map_err(|e| format!("EDEK was not base64: {}", e))
             } else if use_hex {
                 let stripped = if edek.starts_with("0x") || edek.starts_with("0X") {
                     edek.chars().skip(2).collect()
                 } else {
                     edek.clone()
                 };
-                hex::decode(stripped).map_err(|e| {
-                    format!("WARNING: EDEK was not hex at line {}: {}", line_number, e)
-                })
+                hex::decode(stripped).map_err(|e| format!("EDEK was not hex: {}", e))
             } else {
                 // this should've already been handled by clap, but writing again so Rust is happy
                 panic!("Base64 or Hex format must be specified.");
@@ -108,11 +106,24 @@ fn main() {
                                 "WARNING: Encountered an unparsable EDEK on line {}: {}",
                                 line_number, e
                             );
+                            found_broken.push((
+                                identifier,
+                                edek,
+                                format!("Encountered an unparsable EDEK: {}", e),
+                            ));
                         }
                     }
                 }
                 Err(e) => {
-                    println!("{}", e);
+                    println!(
+                        "Encountered an incorrectly formatted EDEK at line {}: {}",
+                        line_number, e
+                    );
+                    found_broken.push((
+                        identifier,
+                        edek,
+                        format!("Encountered an incorrectly formated EDEK: {}", e),
+                    ));
                 }
             }
         }
@@ -120,26 +131,23 @@ fn main() {
 
     // write the edeks if we've found them
     if !found_lines.is_empty() {
-        let output_str = found_lines
-            .into_iter()
-            .map(|line| ron::to_string(&line).unwrap())
-            .collect::<Vec<String>>()
-            .join("\n");
-        let path = Path::new("matching-edeks.txt");
-        let display = path.display();
-        let mut file = match File::create(&path) {
-            Err(why) => panic!("Couldn't create output file {}: {}", display, why),
-            Ok(file) => file,
-        };
-
-        match file.write_all(output_str.as_bytes()) {
-            Err(why) => panic!("Couldn't write output to {}: {}", display, why),
-            Ok(_) => println!("Successfully wrote matching EDEKs to {}", display),
-        }
+        let path = Path::new("matching-edeks.txt").to_path_buf();
+        write_file(&path, &found_lines, verbose).unwrap();
+        println!(
+            "Wrote {} matching EDEKs to {}",
+            found_lines.len(),
+            path.display()
+        );
     } else {
         println!("Found no EDEKs with the given config ID.");
     }
+    if !found_broken.is_empty() {
+        let path = Path::new("broken-edeks.txt").to_path_buf();
+        write_file(&path, &found_broken, verbose).unwrap();
+        println!(
+            "Wrote {} broken EDEKs to {}.",
+            found_broken.len(),
+            path.display()
+        );
+    }
 }
-
-// identifier, base64 || hex
-pub type EdekFileEntry = (String, String);
