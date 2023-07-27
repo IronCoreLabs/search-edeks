@@ -16,24 +16,20 @@ Check out this repo and run `cargo b --release`. The binary will be at `target/r
 
 ```console
 search-edeks --help
-search-edeks 1.1.0
-IronCore Labs <info@ironcorelabs.com>
-Tool to search EDEK's protobuf. Can be used to find EDEKs that need to be rekeyed from an old KMS
-config ID.
+Tool to search EDEK's protobuf. Can be used to find EDEKs that need to be rekeyed from an old KMS config ID.
 
-USAGE:
-    search-edeks [OPTIONS] --id <VALUE> --file <FILE> <--hex|--base64>
+Usage: search-edeks [OPTIONS] --file <FILE> <--id <VALUE>|--mismatched> <--hex|--base64>
 
-OPTIONS:
-    -b, --base64         Consume and output base64 formatted EDEKs
-    -d, --debug          Print extra debug information
-    -f, --file <FILE>    File with one `("identifier", "EDEK")` per line
-    -h, --hex            Consume and output hex formatted EDEKs
-        --help           Print help information
-    -i, --id <VALUE>     Sets the KMS config ID we're searching for
-    -v, --verbose        Output identifier and original EDEK (and error message if applicable). If
-                         not enabled, only identifiers will be output
-    -V, --version        Print version information
+Options:
+  -i, --id <VALUE>   Sets the KMS config ID we're searching for
+  -m, --mismatched   Searches for mismatches between the KMS config ID in the EDEK header and the leased key used to encrypt the EDEK. Resulting EDEKs must be rekeyed with TSP 4.11.1+ to repair.
+  -f, --file <FILE>  File with one `("identifier", "EDEK")` per line
+  -h, --hex          Consume and output hex formatted EDEKs
+  -b, --base64       Consume and output base64 formatted EDEKs
+  -d, --debug        Print extra debug information
+  -v, --verbose      Output identifier and original EDEK (and error message if applicable). If not enabled, only identifiers will be output
+  -h, --help         Print help
+  -V, --version      Print version
 ```
 
 For example `search-edeks --file edeks.txt --id 1201 --hex` would search `edeks.txt` for any EDEKs that were created using KMS config ID `1201`. It would output `matching-edeks.txt` with the one identifier per line for each EDEK that matched. It would output `broken-edeks.txt` with one identifier per line for each EDEK that wasn't parsable as an EDEK. If `--verbose` was enabled, the output would be tuples of the required input form (with the broken EDEKs additonally containing an error message).
