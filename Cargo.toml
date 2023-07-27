@@ -1,9 +1,9 @@
 [package]
 name = "search-edeks"
-version = "1.1.0"
+version = "1.2.0"
 authors = ["IronCore Labs <info@ironcorelabs.com>"]
 categories = ["utilities"]
-description = "Tool to search EDEK's protobuf. Can be used to find EDEKs that need to be rekeyed from an old KMS config ID."
+description = "Tool to search IronCoreLabs Tenant Security Proxy EDEK's protobuf."
 edition = "2021"
 license = "AGPL-3.0-only"
 readme = "README.md"
@@ -13,9 +13,14 @@ repository = "https://github.com/IronCoreLabs/search-edeks"
 [dependencies]
 base64 = "~0.21"
 bytes = "1.4.0"
-clap = { version = "~3", features = ["cargo", "derive", "suggestions"] }
+clap = { version = "~4", features = [
+  "cargo",
+  "derive",
+  "suggestions",
+  "wrap_help",
+] }
 hex = "0.4.3"
-protobuf = {version = "3.2", features = ["with-bytes"]}
+protobuf = { version = "3.2", features = ["with-bytes"] }
 ron = "0.8.0"
 serde = { version = "~1.0", features = ["derive"] }
 

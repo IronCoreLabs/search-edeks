@@ -23,6 +23,8 @@ pub fn write_file<T>(
 where
     T: Serialize + GetIdentifier,
 {
+    // if we ever run into issues writing these vecs all at once (having the entire vec in memory and the concatenated
+    // string) we could write to the handler line by line or use Line/BufWriters directly avoiding vec collection
     let output_str = to_write
         .into_iter()
         .map(|line| {

@@ -1,6 +1,5 @@
 Cargo.lock
 .direnv
-.envrc
 target
 test.txt
 matching-edeks.txt
