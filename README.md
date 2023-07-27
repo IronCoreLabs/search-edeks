@@ -16,7 +16,7 @@ Check out this repo and run `cargo b --release`. The binary will be at `target/r
 
 ```console
 search-edeks --help
-Tool to search EDEK's protobuf. Can be used to find EDEKs that need to be rekeyed from an old KMS config ID.
+Tool to search IronCoreLabs Tenant Security Proxy EDEK's protobuf.
 
 Usage: search-edeks [OPTIONS] --file <FILE> <--id <VALUE>|--mismatched> <--hex|--base64>
 
@@ -33,6 +33,8 @@ Options:
 ```
 
 For example `search-edeks --file edeks.txt --id 1201 --hex` would search `edeks.txt` for any EDEKs that were created using KMS config ID `1201`. It would output `matching-edeks.txt` with the one identifier per line for each EDEK that matched. It would output `broken-edeks.txt` with one identifier per line for each EDEK that wasn't parsable as an EDEK. If `--verbose` was enabled, the output would be tuples of the required input form (with the broken EDEKs additonally containing an error message).
+
+If multiple search filters are included, all must be present for an EDEK to match.
 
 ## Releasing
 
