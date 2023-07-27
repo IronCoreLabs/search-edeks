@@ -13,9 +13,9 @@ repository = "https://github.com/IronCoreLabs/search-edeks"
 [dependencies]
 base64 = "~0.21"
 bytes = "1.4.0"
-clap = { version = "~3", features = ["cargo", "derive", "suggestions"] }
+clap = { version = "~4", features = ["cargo", "derive", "suggestions"] }
 hex = "0.4.3"
-protobuf = {version = "3.2", features = ["with-bytes"]}
+protobuf = { version = "3.2", features = ["with-bytes"] }
 ron = "0.8.0"
 serde = { version = "~1.0", features = ["derive"] }
 
