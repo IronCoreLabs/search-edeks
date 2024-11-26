@@ -79,7 +79,7 @@ jobs:
           os: ubuntu-22.04
           target: arm-unknown-linux-gnueabihf
         - build: macos
-          os: macos-12
+          os: macos-14
           target: x86_64-apple-darwin
         - build: macos-arm64
           os: [self-hosted, macOS, ARM64]
