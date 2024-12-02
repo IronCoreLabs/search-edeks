@@ -16,6 +16,11 @@
 
 name: release
 on:
+  workflow_dispatch:
+    inputs:
+      dummy:
+        description: This workflow dispatch only tests the release process, you must push a tag to actually release. This input variable does nothing.
+        required: false
   push:
     # Enable when testing release infrastructure on a branch.
     # branches:
@@ -43,6 +48,7 @@ jobs:
         echo "SEARCH_EDEKS_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         echo "version is: ${{ env.SEARCH_EDEKS_VERSION }}"
     - name: Create GitHub release
+      if: github.event_name == 'workflow_dispatch'
       id: release
       uses: ncipollo/release-action@v1
       with:
@@ -157,6 +163,7 @@ jobs:
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi
     - name: Upload release artifact
+      if: github.event_name == 'workflow_dispatch'
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -169,6 +176,7 @@ jobs:
         artifactContentType: application/octet-stream
 
   finalize-release:
+    if: github.event_name == 'workflow_dispatch'
     name: finalize-release
     needs: [create-release, build-release]
     runs-on: ubuntu-22.04
