@@ -26,9 +26,7 @@
             src = ./.;
             cargoLock.lockFile = ./Cargo.lock;
             nativeBuildInputs = with pkgs;
-              [ rusttoolchain ]
-              ++ pkgs.lib.optionals pkgs.stdenv.isDarwin
-                [ pkgs.darwin.apple_sdk.frameworks.Security ];
+              [ rusttoolchain ];
           };
           default = packages.find-rekeyable;
         };
@@ -36,9 +34,7 @@
         # nix develop
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs;
-            [ rusttoolchain ]
-            ++ pkgs.lib.optionals pkgs.stdenv.isDarwin
-              [ pkgs.darwin.apple_sdk.frameworks.Security ];
+            [ rusttoolchain ];
         };
 
       });
